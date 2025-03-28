@@ -4,13 +4,13 @@
 
 local map = vim.keymap.set
 
--- Better up and down
+-- Улучшенные перемещения вниз и вверх (поддержка длинных строк)
 map({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })
 map({ "n", "x" }, "<Down>", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })
 map({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, silent = true })
 map({ "n", "x" }, "<Up>", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, silent = true })
 
--- Move to window using the <ctrl> hjkl keys
+-- Перемещение между окнами с помощью <Ctrl> + hjkl
 map("n", "<C-h>", "<C-w>h", { desc = "Go to Left Window", remap = true })
 map("n", "<C-j>", "<C-w>j", { desc = "Go to Lower Window", remap = true })
 map("n", "<C-k>", "<C-w>k", { desc = "Go to Upper Window", remap = true })
@@ -20,13 +20,13 @@ map("n", "<C-Down>", "<C-w>j", { desc = "Go to Lower Window", remap = true })
 map("n", "<C-Up>", "<C-w>k", { desc = "Go to Upper Window", remap = true })
 map("n", "<C-Right>", "<C-w>l", { desc = "Go to Right Window", remap = true })
 
--- Move Lines
-map("n", "<A-j>", "<cmd>execute 'move .+' . v:count1<cr>==", { desc = "Move Down" })
-map("n", "<A-k>", "<cmd>execute 'move .-' . (v:count1 + 1)<cr>==", { desc = "Move Up" })
-map("i", "<A-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Down" })
-map("i", "<A-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move Up" })
-map("v", "<A-j>", ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv", { desc = "Move Down" })
-map("v", "<A-k>", ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv", { desc = "Move Up" })
+-- Перемещение строк
+map("n", "<A-j>", "<cmd>execute 'move .+' . v:count1<cr>==", { desc = "Move Line Down" })
+map("n", "<A-k>", "<cmd>execute 'move .-' . (v:count1 + 1)<cr>==", { desc = "Move Line Up" })
+map("i", "<A-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Line Down" })
+map("i", "<A-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move Line Up" })
+map("v", "<A-j>", ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv", { desc = "Move Selection Down" })
+map("v", "<A-k>", ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv", { desc = "Move Selection Up" })
 map("n", "<A-Down>", "<cmd>execute 'move .+' . v:count1<cr>==", { desc = "Move Down" })
 map("n", "<A-Up>", "<cmd>execute 'move .-' . (v:count1 + 1)<cr>==", { desc = "Move Up" })
 map("i", "<A-Down>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Down" })
@@ -34,7 +34,7 @@ map("i", "<A-Up>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move Up" })
 map("v", "<A-Down>", ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv", { desc = "Move Down" })
 map("v", "<A-Up>", ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv", { desc = "Move Up" })
 
--- Buffers
+-- Работа с буферами
 map("n", "<S-h>", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
 map("n", "<S-l>", "<cmd>bnext<cr>", { desc = "Next Buffer" })
 map("n", "<S-Left>", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
@@ -53,10 +53,10 @@ map("n", "<leader>bo", function()
 end, { desc = "Delete Other Buffers" })
 map("n", "<leader>bD", "<cmd>:bd<cr>", { desc = "Delete Buffer and Window" })
 
--- Formatting
+-- Форматирование кода
 map({ "n", "v" }, "<leader>cf", function()
   LazyVim.format({ force = true })
-end, { desc = "Format" })
+end, { desc = "Format Code" })
 
 -- Diagnostic
 local diagnostic_goto = function(next, severity)
@@ -74,11 +74,11 @@ map("n", "[e", diagnostic_goto(false, "ERROR"), { desc = "Prev Error" })
 map("n", "]w", diagnostic_goto(true, "WARN"), { desc = "Next Warning" })
 map("n", "[w", diagnostic_goto(false, "WARN"), { desc = "Prev Warning" })
 
--- Toggle options
+-- Переключение опций
 LazyVim.format.snacks_toggle():map("<leader>uf")
 LazyVim.format.snacks_toggle(true):map("<leader>uF")
 Snacks.toggle.option("spell", { name = "Spelling" }):map("<leader>us")
-Snacks.toggle.option("wrap", { name = "Wrap" }):map("<leader>uw")
+Snacks.toggle.option("wrap", { name = "Toggle Wrap" }):map("<leader>uw")
 Snacks.toggle.option("relativenumber", { name = "Relative Number" }):map("<leader>uL")
 Snacks.toggle.diagnostics():map("<leader>ud")
 Snacks.toggle.line_number():map("<leader>ul")
@@ -94,7 +94,7 @@ if vim.lsp.inlay_hint then
   Snacks.toggle.inlay_hints():map("<leader>uh")
 end
 
--- Floating terminal
+-- Терминал
 map("n", "<leader>fT", function()
   Snacks.terminal()
 end, { desc = "Terminal (cwd)" })
@@ -112,23 +112,15 @@ end, { desc = "which_key_ignore" })
 map("n", "<leader>ui", vim.show_pos, { desc = "Inspect Pos" })
 map("n", "<leader>uI", "<cmd>InspectTree<cr>", { desc = "Inspect Tree" })
 
--- Better indenting
+-- Улучшенные отступы
 map("v", "<", "<gv")
 map("v", ">", ">gv")
 
--- Save file
+-- Сохранение файла
 map({ "i", "x", "n", "s" }, "<C-s>", "<cmd>w<cr><esc>", { desc = "Save File" })
 
 -- Quit
 map("n", "<leader>qq", "<cmd>qa<cr>", { desc = "Quit All" })
 
--- Copy entire file
+-- Копирование всего файла
 map("n", "<C-a>", "<cmd>normal! ggVGy<CR>", { desc = "Copy Entire File" })
-
--- Aider keymaps
-map("n", "<leader>a/", "<cmd>AiderTerminalToggle<cr>", { desc = "Open Aider" })
-map({ "n", "v" }, "<leader>as", "<cmd>AiderTerminalSend<cr>", { desc = "Send to Aider" })
-map("n", "<leader>ac", "<cmd>AiderQuickSendCommand<cr>", { desc = "Send Command To Aider" })
-map("n", "<leader>ab", "<cmd>AiderQuickSendBuffer<cr>", { desc = "Send Buffer To Aider" })
-map("n", "<leader>a+", "<cmd>AiderQuickAddFile<cr>", { desc = "Add File to Aider" })
-map("n", "<leader>a-", "<cmd>AiderQuickDropFile<cr>", { desc = "Drop File from Aider" })

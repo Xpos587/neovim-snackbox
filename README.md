@@ -14,7 +14,7 @@ for developers who value productivity and flexibility.
 - **Robust LSP Integration**: Preconfigured for Python, Rust, Docker, and more.
 - **Polished UI**: Catppuccin themes and Lualine for a sleek interface.
 - **Convenient Keymaps**: Boost productivity with intuitive mappings.
-- **Tools for Developers**: Null-LS for linting and formatting, support for
+- **Tools for Developers**: None-LS for linting and formatting, support for
   common tools like Prettier, Black, and Ruff.
 
 ---
